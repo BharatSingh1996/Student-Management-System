@@ -1,0 +1,17 @@
+# === IntelliJ & VSCode ===
+.idea/
+*.iml
+.vscode/
+
+# === Spring Boot ===
+Student-Management-System/target/
+Student-Management-System/.mvn/
+Student-Management-System/.idea/
+
+# === React (Vite) ===
+student-management/node_modules/
+student-management/dist/
+student-management/.vite/
+
+# === Env Files ===
+*.env
