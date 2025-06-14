@@ -3,7 +3,6 @@ package com.student.controller;
 
 import com.student.dto.StudentDto;
 import com.student.service.StudentService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +18,6 @@ public class StudentController {
     @PostMapping("/create")
     public ResponseEntity<StudentDto> create(@RequestBody StudentDto dto)   {
       return ResponseEntity.ok(studentService.createStudent(dto));
-   //     return null;
-
     }
     @GetMapping("/list")
     public ResponseEntity<List<StudentDto>> getAll() {
