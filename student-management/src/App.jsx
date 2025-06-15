@@ -3,13 +3,14 @@ import StudentList from "./pages/StudentList";
 import AddStudent from "./pages/AddStudent";
 import EditStudent from "./pages/EditStudent";
 import ViewStudent from "./pages/ViewStudent";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
     <Router>
       <div className="p-4">
         <Routes>
-          <Route path="/" element={<StudentList />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/add" element={<AddStudent />} />
           <Route path="/edit/:id" element={<EditStudent />} />
           <Route path="/view/:id" element={<ViewStudent />} />
