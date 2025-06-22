@@ -1,8 +1,9 @@
-package com.student.service;
+package com.student.serviceImpl;
 
 import com.student.dto.StudentDto;
 import com.student.entity.Student;
 import com.student.repository.StudentRepository;
+import com.student.service.StudentService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
