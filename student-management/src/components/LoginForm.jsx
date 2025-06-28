@@ -1,11 +1,53 @@
-import React from "react";
-import { Box, Button, Paper, TextField, Typography, Link } from "@mui/material";
+import React, { useState } from "react";
+import {
+    Box,
+    Button,
+    Paper,
+    TextField,
+    Typography,
+    Link,
+    CircularProgress,
+} from "@mui/material";
 import SchoolIcon from "@mui/icons-material/School";
+import { BaseUrl, Apis } from "../constants/Apis";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Loader from "../components/Loader";
 
 const LoginForm = () => {
-    const handleLogin = (e) => {
+    const [email, setEmail] = useState("admin@gmail.com");
+    const [password, setPassword] = useState("password123");
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // login logic
+        setError(null);
+        setLoading(true);
+
+        try {
+            const response = await axios.post(BaseUrl + Apis.LOGIN_USER, {
+                email,
+                password,
+            });
+
+            const { accessToken, refreshToken } = response.data;
+            console.log("Resp", response.data);
+
+            if (accessToken) {
+                localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("refreshToken", refreshToken);
+                navigate("/dashboard");
+            } else {
+                setError("Invalid credentials. Please try again.");
+            }
+        } catch (err) {
+            setError("Invalid credentials. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -14,8 +56,9 @@ const LoginForm = () => {
             sx={{
                 padding: 4,
                 borderRadius: 3,
-                background: "linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))",
-                backdropFilter: "blur(8px)", // Glassmorphism effect
+                background:
+                    "linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))",
+                backdropFilter: "blur(8px)",
                 boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
                 border: "1px solid rgba(255, 255, 255, 0.3)",
                 position: "relative",
@@ -27,26 +70,21 @@ const LoginForm = () => {
                     left: 0,
                     right: 0,
                     height: "4px",
-                    background: "linear-gradient(90deg, #1e3a8a, #3b82f6)", // Gradient top border
+                    background: "linear-gradient(90deg, #1e3a8a, #3b82f6)",
                 },
             }}
         >
-            {/* Title with Icon */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
                 <SchoolIcon sx={{ fontSize: 32, color: "#1e3a8a" }} />
                 <Typography
                     variant="h5"
                     fontWeight="bold"
-                    sx={{
-                        color: "#1e3a8a",
-                        fontFamily: "'Poppins', sans-serif",
-                    }}
+                    sx={{ color: "#1e3a8a", fontFamily: "'Poppins', sans-serif" }}
                 >
                     Student Login
                 </Typography>
             </Box>
 
-            {/* Form */}
             <form onSubmit={handleLogin}>
                 <TextField
                     label="Email"
@@ -54,120 +92,88 @@ const LoginForm = () => {
                     fullWidth
                     required
                     type="email"
-                    sx={{
-                        mb: 2,
-                        "& .MuiOutlinedInput-root": {
-                            borderRadius: "8px",
-                            "& fieldset": {
-                                borderColor: "#3b82f6",
-                            },
-                            "&:hover fieldset": {
-                                borderColor: "#1e3a8a",
-                            },
-                            "&.Mui-focused fieldset": {
-                                borderColor: "#1e3a8a",
-                            },
-                        },
-                        "& .MuiInputLabel-root": {
-                            color: "#666",
-                            "&.Mui-focused": {
-                                color: "#1e3a8a",
-                            },
-                        },
-                    }}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    sx={textFieldStyle}
                 />
+
                 <TextField
                     label="Password"
                     variant="outlined"
                     fullWidth
                     required
                     type="password"
-                    sx={{
-                        mb: 2,
-                        "& .MuiOutlinedInput-root": {
-                            borderRadius: "8px",
-                            "& fieldset": {
-                                borderColor: "#3b82f6",
-                            },
-                            "&:hover fieldset": {
-                                borderColor: "#1e3a8a",
-                            },
-                            "&.Mui-focused fieldset": {
-                                borderColor: "#1e3a8a",
-                            },
-                        },
-                        "& .MuiInputLabel-root": {
-                            color: "#666",
-                            "&.Mui-focused": {
-                                color: "#1e3a8a",
-                            },
-                        },
-                    }}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    sx={textFieldStyle}
                 />
+
+                {error && (
+                    <Typography color="error" mb={2} textAlign="center">
+                        {error}
+                    </Typography>
+                )}
+
                 <Box textAlign="right" mb={2}>
                     <Link
                         href="#forgot"
                         underline="none"
-                        sx={{
-                            color: "#3b82f6",
-                            fontFamily: "'Roboto', sans-serif",
-                            fontWeight: 500,
-                            transition: "color 0.3s ease",
-                            "&:hover": {
-                                color: "#1e3a8a",
-                                textDecoration: "underline",
-                            },
-                        }}
+                        sx={{ color: "#3b82f6", fontWeight: 500 }}
                     >
                         Forgot password?
                     </Link>
                 </Box>
+
                 <Button
                     type="submit"
                     variant="contained"
                     fullWidth
-                    sx={{
-                        background: "linear-gradient(90deg, #1e3a8a, #3b82f6)",
-                        borderRadius: "8px",
-                        padding: "12px 0",
-                        fontFamily: "'Roboto', sans-serif",
-                        fontWeight: 600,
-                        fontSize: "1.1rem",
-                        textTransform: "none",
-                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                        "&:hover": {
-                            transform: "scale(1.02)",
-                            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.2)",
-                            background: "linear-gradient(90deg, #1e3a8a, #3b82f6)",
-                        },
-                    }}
+                    disabled={loading}
+                    sx={buttonStyle}
                 >
-                    Login
+                    {loading ? <Loader size={24} color="inherit" /> : "Login"}
                 </Button>
             </form>
 
-            {/* Register Link */}
             <Box textAlign="center" mt={2}>
-                <Typography variant="body2" sx={{ color: "#666", fontFamily: "'Roboto', sans-serif" }}>
+                <Typography variant="body2" sx={{ color: "#666" }}>
                     Don’t have an account?{" "}
-                    <Link
-                        href="#register"
-                        sx={{
-                            color: "#3b82f6",
-                            fontWeight: 500,
-                            transition: "color 0.3s ease",
-                            "&:hover": {
-                                color: "#1e3a8a",
-                                textDecoration: "underline",
-                            },
-                        }}
-                    >
+                    <Link href="#register" sx={{ color: "#3b82f6", fontWeight: 500 }}>
                         Register
                     </Link>
                 </Typography>
             </Box>
         </Paper>
     );
+};
+
+// 🔁 Extracted styles
+const textFieldStyle = {
+    mb: 2,
+    "& .MuiOutlinedInput-root": {
+        borderRadius: "8px",
+        "& fieldset": { borderColor: "#3b82f6" },
+        "&:hover fieldset": { borderColor: "#1e3a8a" },
+        "&.Mui-focused fieldset": { borderColor: "#1e3a8a" },
+    },
+    "& .MuiInputLabel-root": {
+        color: "#666",
+        "&.Mui-focused": { color: "#1e3a8a" },
+    },
+};
+
+const buttonStyle = {
+    background: "linear-gradient(90deg, #1e3a8a, #3b82f6)",
+    borderRadius: "8px",
+    padding: "12px 0",
+    fontWeight: 600,
+    fontSize: "1.1rem",
+    textTransform: "none",
+    "&:hover": {
+        transform: "scale(1.02)",
+        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.2)",
+        background: "linear-gradient(90deg, #1e3a8a, #3b82f6)",
+    },
 };
 
 export default LoginForm;

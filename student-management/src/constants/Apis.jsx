@@ -7,7 +7,13 @@ const port = import.meta.env.VITE_PORT;
 
 export const BaseUrl = `${scheme}://${ip}:${port}`;  // → http://localhost:8082
 
-export const Apis=({
+export const Apis = ({
+
+    //login_API
+
+    LOGIN_USER: "/api/auth/login",
+    REFRESH_TOKEN: "/api/auth/refresh",
+
     //student_API
     STUDENT_LIST: "/v1/api/student/list",
     STUDENT_ADD: "/v1/api/student/add",
@@ -16,5 +22,6 @@ export const Apis=({
     STUDENT_GET_BY_ID: (id) => `/v1/api/student/${id}`,
 
     //CourseApi
-    COURSE_LIST:"/v1/api/course/list",
+    COURSE_LIST: "/v1/api/course/list",
+
 });

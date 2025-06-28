@@ -1,6 +1,6 @@
 // src/hooks/useFetch.js
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 const useFetch = (url) => {
   const [data, setData] = useState([]);
@@ -12,7 +12,7 @@ const useFetch = (url) => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(url);
+        const response = await axiosInstance.get(url);
         if (!ignore) {
           setData(response.data);
         }
@@ -30,7 +30,7 @@ const useFetch = (url) => {
     fetchData();
 
     return () => {
-      ignore = true; // Cleanup for component unmount
+      ignore = true;
     };
   }, [url]);
 
