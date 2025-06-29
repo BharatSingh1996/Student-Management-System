@@ -10,10 +10,9 @@ export const BaseUrl = `${scheme}://${ip}:${port}`;  // → http://localhost:808
 export const Apis = ({
 
     //login_API
-
     LOGIN_USER: "/api/auth/login",
     REFRESH_TOKEN: "/api/auth/refresh",
-
+    VALIDATE_TOKEN: "/api/auth/validate",
     //student_API
     STUDENT_LIST: "/v1/api/student/list",
     STUDENT_ADD: "/v1/api/student/add",

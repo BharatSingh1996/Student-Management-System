@@ -5,14 +5,18 @@ import {
     Paper,
     TextField,
     Typography,
-    Link,
-    CircularProgress,
+    Link
 } from "@mui/material";
 import SchoolIcon from "@mui/icons-material/School";
 import { BaseUrl, Apis } from "../constants/Apis";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
+import { useDispatch } from "react-redux";
+import { setAuthenticated } from "../store/authSlice";
+import { setUser } from "../store/userSlice";
+import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("admin@gmail.com");
@@ -21,6 +25,7 @@ const LoginForm = () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -34,17 +39,27 @@ const LoginForm = () => {
             });
 
             const { accessToken, refreshToken } = response.data;
-            console.log("Resp", response.data);
 
-            if (accessToken) {
+            if (response.status === 200 && accessToken) {
                 localStorage.setItem("accessToken", accessToken);
                 localStorage.setItem("refreshToken", refreshToken);
+                const decoded = jwtDecode(accessToken);
+                const user = {
+                    username: decoded.username,
+                    email: decoded.sub,
+                    roles: decoded.roles,
+                };
+
+                dispatch(setAuthenticated(true));
+                dispatch(setUser(user));
+
+                toast.success("Login successful!");
                 navigate("/dashboard");
-            } else {
-                setError("Invalid credentials. Please try again.");
             }
         } catch (err) {
-            setError("Invalid credentials. Please try again.");
+            const errorMessage = err?.response?.data?.message || "Login failed. Please try again.";
+            setError(errorMessage);
+            toast.error(`${errorMessage}`);
         } finally {
             setLoading(false);
         }
@@ -56,8 +71,7 @@ const LoginForm = () => {
             sx={{
                 padding: 4,
                 borderRadius: 3,
-                background:
-                    "linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))",
+                background: "linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(240, 244, 248, 0.95))",
                 backdropFilter: "blur(8px)",
                 boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
                 border: "1px solid rgba(255, 255, 255, 0.3)",
@@ -115,11 +129,7 @@ const LoginForm = () => {
                 )}
 
                 <Box textAlign="right" mb={2}>
-                    <Link
-                        href="#forgot"
-                        underline="none"
-                        sx={{ color: "#3b82f6", fontWeight: 500 }}
-                    >
+                    <Link href="#forgot" underline="none" sx={{ color: "#3b82f6", fontWeight: 500 }}>
                         Forgot password?
                     </Link>
                 </Box>

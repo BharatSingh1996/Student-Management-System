@@ -1,14 +1,18 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const PrivateRoute = () => {
-    const accessToken = localStorage.getItem("accessToken");
+    const { isAuthenticated, authChecked } = useSelector((state) => state.auth);
 
-    if (!accessToken) {
-        return <Navigate to="/login" replace />;
+    console.log(" isAuthenticated ", isAuthenticated, ":;  authChecked ", authChecked);
+
+    if (!authChecked) {
+        return <Loader message="Checking auth..." />;
     }
 
-    return <Outlet />;
+    return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;

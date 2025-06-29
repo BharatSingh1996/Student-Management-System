@@ -1,0 +1,19 @@
+.Toastify__toast--success {
+    background-color: #2e7d32 !important;
+    /* Dark Green */
+    color: #fff;
+}
+
+.Toastify__toast--error {
+    background-color: #ff0707 !important;
+    /* Strong Red */
+    color: #fff;
+}
+
+.Toastify__toast--info {
+    background-color: #0288d1 !important;
+}
+
+.Toastify__toast--warning {
+    background-color: #f9a825 !important;
+}
